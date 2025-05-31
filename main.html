@@ -1,13 +1,153 @@
-<div class="container">
-  <div class="progress-container">
-    <div class="progress" id="progress"></div>
-    <div class="circle active" id="circle-1">1</div>
-    <div class="circle" id="circle-2">2</div>
-    <div class="circle" id="circle-3">3</div>
-    <div class="circle" id="circle-4">4</div>
-    <div class="circle" id="circle-5">5</div>
-  </div>
-  <button id="prev" disabled>Previous</button>
-  <button id="next">Next</button>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Progress Bar Component</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      width: 350px;
+      text-align: center;
+    }
+
+    .progress-container {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 30px;
+      max-width: 100%;
+    }
+
+    .progress-container::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      right: 15px;
+      height: 4px;
+      background-color: #d3d3d3;
+      transform: translateY(-50%);
+      z-index: 1;
+      border-radius: 2px;
+    }
+
+    .progress {
+      background-color: #4caf50;
+      height: 4px;
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      width: 0%;
+      transform: translateY(-50%);
+      z-index: 2;
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    .circle {
+      background-color: #d3d3d3;
+      color: #999;
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 3;
+      font-weight: bold;
+      user-select: none;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .circle.active {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    button {
+      background-color: #4caf50;
+      border: none;
+      color: white;
+      padding: 10px 25px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 0 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:disabled {
+      background-color: #a5d6a7;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="progress-container">
+      <div class="progress" id="progress"></div>
+      <div class="circle active" id="circle-1">1</div>
+      <div class="circle" id="circle-2">2</div>
+      <div class="circle" id="circle-3">3</div>
+      <div class="circle" id="circle-4">4</div>
+      <div class="circle" id="circle-5">5</div>
+    </div>
+    <button id="prev" disabled>Previous</button>
+    <button id="next">Next</button>
+  </div>
+
+  <script>
+    const progress = document.getElementById('progress');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    const circles = document.querySelectorAll('.circle');
+
+    let currentActive = 1;
+
+    next.addEventListener('click', () => {
+      if (currentActive < circles.length) {
+        currentActive++;
+        update();
+      }
+    });
+
+    prev.addEventListener('click', () => {
+      if (currentActive > 1) {
+        currentActive--;
+        update();
+      }
+    });
+
+    function update() {
+      circles.forEach((circle, idx) => {
+        if (idx < currentActive) {
+          circle.classList.add('active');
+        } else {
+          circle.classList.remove('active');
+        }
+      });
+
+      const progressPercent = ((currentActive - 1) / (circles.length - 1)) * 100;
+      progress.style.width = progressPercent + '%';
+
+      prev.disabled = currentActive === 1;
+      next.disabled = currentActive === circles.length;
+    }
+  </script>
+</body>
+</html>
